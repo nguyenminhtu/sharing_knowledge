@@ -1,27 +1,30 @@
-var webpack = require('webpack');
-var path = require('path');
-
-var parentDir = path.join(__dirname, '/');
+const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    entry: "./src/index.js",
-    module: {
-        loaders: [{
-            test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                loader: 'babel-loader'
-            },{
-                test: /\.less$/,
-                loaders: ["style-loader", "css-loder", "less-loader"]
-            }
-        ]
-    },
-    output: {
-        path: parentDir + '/dist',
-        filename: 'bundle.js'
-    },
-    devServer: {
-        contentBase: parentDir,
-        historyApiFallback: true
-    }
-}
+  entry: [
+    path.join(__dirname, "src/index.js")
+  ],
+  output: {
+    path: path.join(__dirname, "dist"),
+    filename: '[name].[hash].js'
+  },
+  devServer: {
+    historyApiFallback: true,
+    port: 8081
+  },
+  module: {
+    rules: [
+      { test: /\.(js|jsx)?$/, exclude: /node_modules/, loaders: ['babel-loader'] },
+      { test: /\.(css|scss)$/, loaders: ['style-loader', 'css-loader', 'sass-loader'] }
+    ]
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html',
+      filename: 'index.html'
+    })
+  ]
+};
